@@ -41,6 +41,14 @@ function addTask(taskObj) {
     listCon.appendChild(li);
 }
 
+// Set up an event listener if user presses Enter in input bar
+taskInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        document.querySelector('.addButton').click();
+    }
+})
+
 function add() {
     const taskObj = {
         name: taskInput.value,
