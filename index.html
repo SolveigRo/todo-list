@@ -7,14 +7,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <h2>Oppgaveliste</h2>
-        <input type="text" id="taskInput" placeholder="Legg til oppgave...">
-        <button onclick="add()" class="addButton">Legg til</button>
-        <button onclick="del()" class="removeAllButton">Fjern alle</button>
+    <div class="outerContainer">
+        <div class="header">
+            <h1>Oppgaveliste</h1>
+            <div class="inputContainer">
+                <input type="text" id="taskInput" placeholder="Legg til oppgave...">
+                <button onclick="add()" class="addButton">Legg til</button>
+                <button onclick="del()" class="removeAllButton">Fjern alle</button>
+            </div>
+        </div>
+        <ul>
+        </ul>
     </div>
-    <ul>
-    </ul>
     <script src="script.js"></script>
 </body>
 </html>
