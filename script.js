@@ -24,14 +24,14 @@ function addTask(taskName) {
 
     // Add complete checkbox to each item in the list
     const spanComplete = document.createElement('span');
-    const completeMrk = document.createTextNode('\u2610'); //2611 when complete
+    const completeMrk = document.createTextNode('\u2714'); 
     spanComplete.className = 'completeBtn';
     spanComplete.appendChild(completeMrk);
     li.appendChild(spanComplete);
 
     // Add delete mark to each item in list
     const spanDelete = document.createElement('span');
-    const deleteMrk = document.createTextNode('\u2612');
+    const deleteMrk = document.createTextNode('\u2716');
     spanDelete.className = 'deleteBtn';
     spanDelete.appendChild(deleteMrk);
     li.appendChild(spanDelete);
