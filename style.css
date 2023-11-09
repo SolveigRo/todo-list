@@ -73,3 +73,11 @@ li:hover {
     background-color: red;
     color: white;
 }
+
+.incompleteTask {
+    text-decoration: none;
+}
+
+.completeTask {
+    text-decoration: line-through;
+}

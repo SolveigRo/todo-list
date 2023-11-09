@@ -69,6 +69,8 @@ function del() {
 function markComplete(taskObj) {
     console.log(`The taskObj marked as complete:}`);
     console.log(taskObj);
-    taskObj.complete = true;
     console.log(tasks);
+    taskObj.complete = !taskObj.complete;   // So it becomes the opposite of what is was
+    event.target.parentNode.className = taskObj.complete ? 'completeTask' : 'incompleteTask';
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
