@@ -1,5 +1,4 @@
-
-// Set up variables for input field and list container
+// Set up variables
 const listCon = document.querySelector('ul');
 const taskInput = document.querySelector('#taskInput');
 
@@ -13,12 +12,13 @@ JSON.parse(localStorage.getItem('tasks')) : [];
 tasks.forEach(addTask);
 
 // Add new tasks to list
-function addTask(taskName) {
+function addTask(taskObj) {
     const li = document.createElement('li');
+    li.className = taskObj.complete ? 'completeTask' : 'incompleteTask';
 
     // Add text content
     const spanText = document.createElement('span')
-    spanText.textContent = taskName;
+    spanText.textContent = taskObj.name;
     spanText.className = 'taskName';
     li.appendChild(spanText);
 
@@ -26,6 +26,7 @@ function addTask(taskName) {
     const spanComplete = document.createElement('span');
     const completeMrk = document.createTextNode('\u2714'); 
     spanComplete.className = 'completeBtn';
+    spanComplete.onclick = function() {markComplete(taskObj)};
     spanComplete.appendChild(completeMrk);
     li.appendChild(spanComplete);
 
@@ -41,9 +42,13 @@ function addTask(taskName) {
 }
 
 function add() {
-    tasks.push(taskInput.value);
+    const taskObj = {
+        name: taskInput.value,
+        complete: false
+    }
+    tasks.push(taskObj);
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    addTask(taskInput.value)
+    addTask(taskObj)
     taskInput.value = '';
 }
 
@@ -51,4 +56,11 @@ function del() {
     localStorage.clear();
     listCon.innerHTML = '';
     tasks = [];
+}
+
+function markComplete(taskObj) {
+    console.log(`The taskObj marked as complete:}`);
+    console.log(taskObj);
+    taskObj.complete = true;
+    console.log(tasks);
 }
