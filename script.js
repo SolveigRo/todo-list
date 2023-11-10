@@ -68,9 +68,35 @@ function del() {
 
 function markComplete(taskObj) {
     console.log(`The taskObj marked as complete:}`);
-    console.log(taskObj);
     console.log(tasks);
     taskObj.complete = !taskObj.complete;   // So it becomes the opposite of what is was
-    event.target.parentNode.className = taskObj.complete ? 'completeTask' : 'incompleteTask';
+    event.target.parentNode.className = taskObj.complete ? 'completeTask' : 'incompleteTask'; // Set class based on completion
+
+    // If only one task in array, no need to shift it
+    if (tasks.length === 1) { 
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        return;
+    };
+
+
+    const taskIndex = tasks.findIndex(task => task.name === taskObj.name); // Find index of task object in array
+    console.log(`the taskIndex is: ${taskIndex}`);
+    tasks.splice(taskIndex, 1);  // Remove task from array
+
+    const elementToMove = event.target.parentElement;
+    const parentElement = event.target.parentElement.parentElement;
+
+    if (taskObj.complete) {
+        tasks.push(taskObj);
+        parentElement.appendChild(elementToMove); // Move the list item to bottom
+    } else {
+        tasks.unshift(taskObj);
+        const siblingElement = parentElement.firstChild;
+        parentElement.insertBefore(elementToMove, siblingElement);
+    }
+    
     localStorage.setItem('tasks', JSON.stringify(tasks));
+    
+    
+
 }
