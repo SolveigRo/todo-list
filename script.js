@@ -1,20 +1,17 @@
 // Set up variables
-const listCon = document.querySelector('ul');
+const newTasks = document.querySelector('.newTasks');
+const completedTasks = document.querySelector('.completedTasks');
 const taskInput = document.querySelector('#taskInput');
 
 // Load existing tasks or create empty array if no tasks saved in localstorage
 let tasks = localStorage.getItem('tasks') ? 
 JSON.parse(localStorage.getItem('tasks')) : [];
 
-// Load each existing task into the list
-// Used forEach with addTask as the callback function 
-// Works as addTask is a named function and already loaded
 tasks.forEach(addTask);
 
 // Add new tasks to list
 function addTask(taskObj) {
     const li = document.createElement('li');
-    li.className = taskObj.complete ? 'completeTask' : 'incompleteTask';
 
     // Add text content
     const spanText = document.createElement('span')
@@ -26,7 +23,7 @@ function addTask(taskObj) {
     const spanComplete = document.createElement('span');
     const completeMrk = document.createTextNode('\u2714'); 
     spanComplete.className = 'completeBtn';
-    spanComplete.onclick = function() {markComplete(taskObj)};
+    spanComplete.onclick = function() {changeCheckbox(taskObj)};
     spanComplete.appendChild(completeMrk);
     li.appendChild(spanComplete);
 
@@ -37,8 +34,20 @@ function addTask(taskObj) {
     spanDelete.appendChild(deleteMrk);
     li.appendChild(spanDelete);
 
-    // Add the item to the displayed list
-    listCon.appendChild(li);
+    if (taskObj.complete) {
+        completedTasks.appendChild(li); // Add the completed task to the bottom of the list
+    } else {
+        const firstChild = newTasks.firstChild; // Get the first item in list
+        newTasks.insertBefore(li, firstChild); // Insert the new task in front of the list
+    }
+
+
+    /*if(tasks.length){ // already task in list
+        const firstChild = newTasks.firstChild;
+        newTasks.insertBefore(li, firstChild);
+    } else { // empty list or completed task
+        newTasks.appendChild(li);
+    }*/
 }
 
 // Set up an event listener if user presses Enter in input bar
@@ -62,41 +71,38 @@ function add() {
 
 function del() {
     localStorage.clear();
-    listCon.innerHTML = '';
+    newTasks.innerHTML = '';
+    completedTasks.innerHTML = '';
     tasks = [];
 }
 
-function markComplete(taskObj) {
-    console.log(`The taskObj marked as complete:}`);
-    console.log(tasks);
+function changeCheckbox(taskObj, e) {
     taskObj.complete = !taskObj.complete;   // So it becomes the opposite of what is was
-    event.target.parentNode.className = taskObj.complete ? 'completeTask' : 'incompleteTask'; // Set class based on completion
-
-    // If only one task in array, no need to shift it
-    if (tasks.length === 1) { 
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        return;
-    };
-
-
-    const taskIndex = tasks.findIndex(task => task.name === taskObj.name); // Find index of task object in array
-    console.log(`the taskIndex is: ${taskIndex}`);
-    tasks.splice(taskIndex, 1);  // Remove task from array
-
-    const elementToMove = event.target.parentElement;
-    const parentElement = event.target.parentElement.parentElement;
-
+    console.log('event');
+    console.log(e);
     if (taskObj.complete) {
-        tasks.push(taskObj);
-        parentElement.appendChild(elementToMove); // Move the list item to bottom
+        markComplete(taskObj);
     } else {
-        tasks.unshift(taskObj);
-        const siblingElement = parentElement.firstChild;
-        parentElement.insertBefore(elementToMove, siblingElement);
+        markUncomplete(taskObj);
     }
-    
     localStorage.setItem('tasks', JSON.stringify(tasks));
     
-    
+}
+
+
+function markComplete(taskObj) {
+    const elementToMove = event.target.parentElement;
+    completedTasks.appendChild(elementToMove); // Move the list item to bottom
+}
+
+
+function markUncomplete(taskObj) {
+    const elementToMove = event.target.parentElement;
+    if (newTasks.firstChild) {
+        const siblingElement = newTasks.firstChild;
+        newTasks.insertBefore(elementToMove, siblingElement);
+    } else {
+        newTasks.appendChild(elementToMove);
+    }
 
 }

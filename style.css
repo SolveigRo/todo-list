@@ -78,6 +78,6 @@ li:hover {
     text-decoration: none;
 }
 
-.completeTask {
+.completedTasks {
     text-decoration: line-through;
 }
