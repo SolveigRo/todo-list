@@ -38,8 +38,7 @@ function addTask(taskObj) {
     if (taskObj.complete) {
         completedTasks.appendChild(li); // Add the completed task to the bottom of the list
     } else {
-        const firstChild = newTasks.firstChild; // Get the first item in list
-        newTasks.insertBefore(li, firstChild); // Insert the new task in front of the list
+        newTasks.insertBefore(li, newTasks.firstChild); // Insert the new task in front of the list
     }
 }
 
@@ -72,29 +71,22 @@ function del() {
 function changeCheckbox(taskObj) {
     taskObj.complete = !taskObj.complete;   // So it becomes the opposite of what is was
     if (taskObj.complete) {
-        markComplete(taskObj);
+        markComplete();
     } else {
-        markUncomplete(taskObj);
+        markUncomplete();
     }
     localStorage.setItem('tasks', JSON.stringify(tasks));
     
 }
-
 
 function markComplete() {
     const elementToMove = event.target.parentElement;
     completedTasks.appendChild(elementToMove); // Move the list item to bottom
 }
 
-
 function markUncomplete() {
     const elementToMove = event.target.parentElement;
-    if (newTasks.firstChild) {
-        const siblingElement = newTasks.firstChild;
-        newTasks.insertBefore(elementToMove, siblingElement);
-    } else {
-        newTasks.appendChild(elementToMove);
-    }
+    newTasks.insertBefore(elementToMove, newTasks.firstChild);
 
 }
 
