@@ -31,6 +31,7 @@ function addTask(taskObj) {
     const spanDelete = document.createElement('span');
     const deleteMrk = document.createTextNode('\u2716');
     spanDelete.className = 'deleteBtn';
+    spanDelete.onclick = function() {removeTask(taskObj)}
     spanDelete.appendChild(deleteMrk);
     li.appendChild(spanDelete);
 
@@ -40,14 +41,6 @@ function addTask(taskObj) {
         const firstChild = newTasks.firstChild; // Get the first item in list
         newTasks.insertBefore(li, firstChild); // Insert the new task in front of the list
     }
-
-
-    /*if(tasks.length){ // already task in list
-        const firstChild = newTasks.firstChild;
-        newTasks.insertBefore(li, firstChild);
-    } else { // empty list or completed task
-        newTasks.appendChild(li);
-    }*/
 }
 
 // Set up an event listener if user presses Enter in input bar
@@ -76,10 +69,8 @@ function del() {
     tasks = [];
 }
 
-function changeCheckbox(taskObj, e) {
+function changeCheckbox(taskObj) {
     taskObj.complete = !taskObj.complete;   // So it becomes the opposite of what is was
-    console.log('event');
-    console.log(e);
     if (taskObj.complete) {
         markComplete(taskObj);
     } else {
@@ -90,13 +81,13 @@ function changeCheckbox(taskObj, e) {
 }
 
 
-function markComplete(taskObj) {
+function markComplete() {
     const elementToMove = event.target.parentElement;
     completedTasks.appendChild(elementToMove); // Move the list item to bottom
 }
 
 
-function markUncomplete(taskObj) {
+function markUncomplete() {
     const elementToMove = event.target.parentElement;
     if (newTasks.firstChild) {
         const siblingElement = newTasks.firstChild;
@@ -105,4 +96,12 @@ function markUncomplete(taskObj) {
         newTasks.appendChild(elementToMove);
     }
 
+}
+
+function removeTask(taskObj) {
+    const removedTask = event.target.parentElement;
+    removedTask.remove();
+    const indexOfTask = tasks.findIndex(task => task.name === taskObj.name);
+    tasks.splice(indexOfTask, 1);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
