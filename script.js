@@ -1,3 +1,5 @@
+'use strict' // Use strict mode to help catch errors and improve quality of code
+
 // Set up variables
 const newTasks = document.querySelector('.newTasks');
 const completedTasks = document.querySelector('.completedTasks');
@@ -12,29 +14,12 @@ tasks.forEach(addTask);
 // Add new tasks to list
 function addTask(taskObj) {
     const li = document.createElement('li');
-
-    // Add text content
-    const spanText = document.createElement('span')
-    spanText.textContent = taskObj.name;
-    spanText.className = 'taskName';
-    li.appendChild(spanText);
-
-    // Add complete checkbox to each item in the list
-    const spanComplete = document.createElement('span');
-    const completeMrk = document.createTextNode('\u2714'); 
-    spanComplete.className = 'completeBtn';
-    spanComplete.onclick = function() {changeCheckbox(taskObj)};
-    spanComplete.appendChild(completeMrk);
-    li.appendChild(spanComplete);
-
-    // Add delete mark to each item in list
-    const spanDelete = document.createElement('span');
-    const deleteMrk = document.createTextNode('\u2716');
-    spanDelete.className = 'deleteBtn';
-    spanDelete.onclick = function() {removeTask(taskObj)}
-    spanDelete.appendChild(deleteMrk);
-    li.appendChild(spanDelete);
-
+    li.name = taskObj.id;
+    li.innerHTML = `
+        <span class="taskName">${taskObj.name}</span>
+        <span class="completeBtn" onclick="changeCheckbox(this)">\u2714</span>
+        <span class="deleteBtn" onclick="removeTask(this)">\u2716</span>
+    `
     if (taskObj.complete) {
         completedTasks.appendChild(li); // Add the completed task to the bottom of the list
     } else {
@@ -53,11 +38,12 @@ taskInput.addEventListener('keypress', function(event) {
 function add() {
     const taskObj = {
         name: taskInput.value,
-        complete: false
+        complete: false, 
+        id: Date.now()
     }
     tasks.push(taskObj);
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    addTask(taskObj)
+    addTask(taskObj);
     taskInput.value = '';
 }
 
@@ -68,32 +54,22 @@ function del() {
     tasks = [];
 }
 
-function changeCheckbox(taskObj) {
+function changeCheckbox(taskEl) {
+    const taskId = taskEl.parentNode.name;
+    const taskObj = tasks.find(task => task.id === taskId); // Find the marked task
     taskObj.complete = !taskObj.complete;   // So it becomes the opposite of what is was
     if (taskObj.complete) {
-        markComplete();
+        completedTasks.appendChild(taskEl.parentNode);
     } else {
-        markUncomplete();
+        newTasks.insertBefore(taskEl.parentNode, newTasks.firstChild)
     }
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    
 }
 
-function markComplete() {
-    const elementToMove = event.target.parentElement;
-    completedTasks.appendChild(elementToMove); // Move the list item to bottom
-}
-
-function markUncomplete() {
-    const elementToMove = event.target.parentElement;
-    newTasks.insertBefore(elementToMove, newTasks.firstChild);
-
-}
-
-function removeTask(taskObj) {
-    const removedTask = event.target.parentElement;
-    removedTask.remove();
-    const indexOfTask = tasks.findIndex(task => task.name === taskObj.name);
+function removeTask(taskEl) {
+    taskEl.parentNode.remove();
+    const taskId = taskEl.parentNode.name;
+    const indexOfTask = tasks.findIndex(task => task.id === taskId);
     tasks.splice(indexOfTask, 1);
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
