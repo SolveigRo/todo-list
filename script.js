@@ -6,12 +6,12 @@ const completedTasks = document.querySelector('.completedTasks');
 const taskInput = document.querySelector('#taskInput');
 
 // Load existing tasks or create empty array if no tasks saved in localstorage
-let tasks = localStorage.getItem('tasks') ? 
+const tasks = localStorage.getItem('tasks') ? 
 JSON.parse(localStorage.getItem('tasks')) : [];
 
 tasks.forEach(addTask);
 
-// Add new tasks to list
+// Add tasks to list
 function addTask(taskObj) {
     const li = document.createElement('li');
     li.name = taskObj.id;
@@ -21,20 +21,13 @@ function addTask(taskObj) {
         <span class="deleteBtn" onclick="removeTask(this)">\u2716</span>
     `
     if (taskObj.complete) {
-        completedTasks.appendChild(li); // Add the completed task to the bottom of the list
+        completedTasks.appendChild(li); // Add the completed task to the bottom of the completed list
     } else {
-        newTasks.insertBefore(li, newTasks.firstChild); // Insert the new task in front of the list
+        newTasks.insertBefore(li, newTasks.firstChild); // Insert the new task in the start of the list of uncompleted tasks
     }
 }
 
-// Set up an event listener if user presses Enter in input bar
-taskInput.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        document.querySelector('.addButton').click();
-    }
-})
-
+// Create new task object 
 function add() {
     const taskObj = {
         name: taskInput.value,
@@ -47,13 +40,15 @@ function add() {
     taskInput.value = '';
 }
 
+// Delete all task objects
 function del() {
-    localStorage.clear();
+    localStorage.removeItem('tasks');
     newTasks.innerHTML = '';
     completedTasks.innerHTML = '';
     tasks = [];
 }
 
+// Evoked from user checking or unchecking a task
 function changeCheckbox(taskEl) {
     const taskId = taskEl.parentNode.name;
     const taskObj = tasks.find(task => task.id === taskId); // Find the marked task
@@ -66,6 +61,7 @@ function changeCheckbox(taskEl) {
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
+// Remove single task object
 function removeTask(taskEl) {
     taskEl.parentNode.remove();
     const taskId = taskEl.parentNode.name;
@@ -73,3 +69,11 @@ function removeTask(taskEl) {
     tasks.splice(indexOfTask, 1);
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
+
+// Set up an event listener if user presses Enter in input bar
+taskInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        document.querySelector('.addButton').click();
+    }
+})
