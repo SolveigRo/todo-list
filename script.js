@@ -14,10 +14,10 @@ tasks.forEach(addTask);
 // Add tasks to list
 function addTask(taskObj) {
     const li = document.createElement('li');
-    li.name = taskObj.id;
+    li.name = taskObj.id; //was u2714, add logic to check if completed or not
     li.innerHTML = `
         <span class="taskName">${taskObj.name}</span>
-        <span class="completeBtn" onclick="changeCheckbox(this)">\u2714</span>
+        <span class="completeBtn" onclick="changeCheckbox(this)">\u2714</span> 
         <span class="deleteBtn" onclick="removeTask(this)">\u2716</span>
     `
     if (taskObj.complete) {
@@ -54,7 +54,7 @@ function changeCheckbox(taskEl) {
     const taskObj = tasks.find(task => task.id === taskId); // Find the marked task
     taskObj.complete = !taskObj.complete;   // So it becomes the opposite of what is was
     if (taskObj.complete) {
-        completedTasks.appendChild(taskEl.parentNode);
+        completedTasks.insertBefore(taskEl.parentNode, completedTasks.firstChild);
     } else {
         newTasks.insertBefore(taskEl.parentNode, newTasks.firstChild)
     }
