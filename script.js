@@ -1,20 +1,21 @@
 'use strict' // Use strict mode to help catch errors and improve quality of code
+// Can not use undeclared variables when using strict mode
 
 // Set up variables
-const newTasks = document.querySelector('.newTasks');
+const newTasks = document.querySelector('.newTasks'); 
 const completedTasks = document.querySelector('.completedTasks');
 const taskInput = document.querySelector('#taskInput');
 
-// Load existing tasks or create empty array if no tasks saved in localstorage
+// Check localStorage if tasks exists, if not, assign empty array
 const tasks = localStorage.getItem('tasks') ? 
 JSON.parse(localStorage.getItem('tasks')) : [];
 
-tasks.forEach(addTask);
+tasks.forEach(addTask); // Add html elements for each task in list
 
-// Add tasks to list
+// Add tasks as html elements
 function addTask(taskObj) {
     const li = document.createElement('li');
-    li.name = taskObj.id; //was u2714, add logic to check if completed or not
+    li.name = taskObj.id; 
     li.innerHTML = `
         <span class="taskName">${taskObj.name}</span>
         <span class="completeBtn" onclick="changeCheckbox(this)">\u2714</span> 
@@ -27,7 +28,7 @@ function addTask(taskObj) {
     }
 }
 
-// Create new task object 
+// Create new task object, create html elements for task, and add to list in localStorage.
 function add() {
     const taskObj = {
         name: taskInput.value,
@@ -40,7 +41,7 @@ function add() {
     taskInput.value = '';
 }
 
-// Delete all task objects
+// Delete all tasks from html list and localStorage
 function del() {
     localStorage.removeItem('tasks');
     newTasks.innerHTML = '';
@@ -50,23 +51,23 @@ function del() {
 
 // Evoked from user checking or unchecking a task
 function changeCheckbox(taskEl) {
-    const taskId = taskEl.parentNode.name;
-    const taskObj = tasks.find(task => task.id === taskId); // Find the marked task
-    taskObj.complete = !taskObj.complete;   // So it becomes the opposite of what is was
-    if (taskObj.complete) {
+    const taskId = taskEl.parentNode.name; // Task id is saved on li element
+    const taskObj = tasks.find(task => task.id === taskId); // Find the current task
+    taskObj.complete = !taskObj.complete;   // Set task completion to opposite 
+    if (taskObj.complete) { // If complete, add it to start of completed tasks list
         completedTasks.insertBefore(taskEl.parentNode, completedTasks.firstChild);
-    } else {
+    } else { // If marked uncompleted, add it to start of new tasks list
         newTasks.insertBefore(taskEl.parentNode, newTasks.firstChild)
     }
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-// Remove single task object
+// Remove single task from html and localStorage list
 function removeTask(taskEl) {
-    taskEl.parentNode.remove();
+    taskEl.parentNode.remove(); // Remove task from html by removing its li element and children
     const taskId = taskEl.parentNode.name;
     const indexOfTask = tasks.findIndex(task => task.id === taskId);
-    tasks.splice(indexOfTask, 1);
+    tasks.splice(indexOfTask, 1); // Remove task from task list
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
