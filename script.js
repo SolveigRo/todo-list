@@ -1,5 +1,4 @@
 'use strict' // Use strict mode to help catch errors and improve quality of code
-// Can not use undeclared variables when using strict mode
 
 // Set up variables
 const newTasks = document.querySelector('.newTasks'); 
@@ -52,8 +51,8 @@ function del() {
 // Evoked from user checking or unchecking a task
 function changeCheckbox(taskEl) {
     const taskId = taskEl.parentNode.name; // Task id is saved on li element
-    const taskObj = tasks.find(task => task.id === taskId); // Find the current task
-    taskObj.complete = !taskObj.complete;   // Set task completion to opposite 
+    const taskObj = tasks.find(task => task.id === taskId);
+    taskObj.complete = !taskObj.complete;   
     if (taskObj.complete) { // If complete, add it to start of completed tasks list
         completedTasks.insertBefore(taskEl.parentNode, completedTasks.firstChild);
     } else { // If marked uncompleted, add it to start of new tasks list
